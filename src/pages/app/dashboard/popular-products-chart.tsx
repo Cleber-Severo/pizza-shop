@@ -93,7 +93,7 @@ const PopularProductsChart = () => {
                 <Cell
                   key={`cell-${idx}`}
                   fill={COLORS[idx]}
-                  className='stroke-background dark:bg-[#18181b] hover:opacity-80'
+                  className='stroke-card dark:bg-[#18181b] hover:opacity-80'
                 />
               ))}
             </Pie>
