@@ -1,21 +1,41 @@
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from './ui/dropdown-menu'
 import { Button } from './ui/button'
 import { Building, ChevronDown, LogOut } from 'lucide-react'
+import { useQuery } from '@tanstack/react-query'
+import { getProfile } from '@/api/get-profile'
+import { getManagedRestaurant } from '@/api/get-managed-restaurante'
+import { Skeleton } from './ui/skeleton'
 
 const AccountMenu = () => {
+
+  const { data: profile, isLoading: isLoadingProfile } = useQuery({
+    queryKey: ['profile'],
+    queryFn: getProfile
+  })
+
+  const { data: managedRestaurant, isLoading: isLoadingManagedRestaurante } = useQuery({
+    queryKey: ['managed-restaurant'],
+    queryFn: getManagedRestaurant
+  })
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant={'outline'} className='flex items-center gap-2 select-none'>
-          Pizza shop
+          {isLoadingManagedRestaurante
+            ? (
+              <Skeleton className='h-4 w-40' />
+            )
+            : managedRestaurant?.name
+          }
           <ChevronDown className='w-4 h-4' />
         </Button>
       </DropdownMenuTrigger>
 
       <DropdownMenuContent align='end' className='w-56'>
         <DropdownMenuLabel className='flex flex-col'>
-          <span>Cléber Severo</span>
-          <span className='text-xs font-normal text-muted-foreground'>clebersevero@gmail.com</span>
+          <span>{profile?.name}</span>
+          <span className='text-xs font-normal text-muted-foreground'>{profile?.email}</span>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem>
