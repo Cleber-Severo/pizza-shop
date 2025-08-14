@@ -1,67 +1,73 @@
-import { Button } from '@/components/ui/button'
-import { Dialog, DialogTrigger } from '@/components/ui/dialog'
-import { TableRow, TableCell } from '@/components/ui/table'
-import { Search, ArrowRight, X } from 'lucide-react'
-import OrderDetails from './order-details'
-import { OrderStatus } from '@/components/order-status'
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogTrigger } from "@/components/ui/dialog";
+import { TableRow, TableCell } from "@/components/ui/table";
+import { Search, ArrowRight, X } from "lucide-react";
+import OrderDetails from "./order-details";
+import { OrderStatus } from "@/components/order-status";
 
-import { formatDistanceToNow } from 'date-fns'
-import { ptBR } from 'date-fns/locale'
+import { formatDistanceToNow } from "date-fns";
+import { ptBR } from "date-fns/locale";
+import { useState } from "react";
 
 interface OrderTableRow {
   order: {
-    orderId: string
-    createdAt: string
-    status: "pending" | "canceled" | "processing" | "delivering" | "delivered"
-    customerName: string
-    total: number
-  }
+    orderId: string;
+    createdAt: string;
+    status: "pending" | "canceled" | "processing" | "delivering" | "delivered";
+    customerName: string;
+    total: number;
+  };
 }
 
 const OrderTableRow = ({ order }: OrderTableRow) => {
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+
   return (
     <TableRow>
       <TableCell>
-        <Dialog>
+        <Dialog open={isDetailsOpen} onOpenChange={setIsDetailsOpen}>
           <DialogTrigger asChild>
-            <Button variant={'outline'} size='xs' className='cursor-pointer'>
-              <Search className='w-3 h-3' />
-              <span className='sr-only'>Detalhes do pedido</span>
+            <Button variant={"outline"} size="xs" className="cursor-pointer">
+              <Search className="h-3 w-3" />
+              <span className="sr-only">Detalhes do pedido</span>
             </Button>
           </DialogTrigger>
-          <OrderDetails />
+          <OrderDetails orderId={order.orderId} open={isDetailsOpen} />
         </Dialog>
       </TableCell>
-      <TableCell className='font-mono text-xs font-medium'>{order.orderId}</TableCell>
-      <TableCell className='text-muted-foreground'>
+      <TableCell className="font-mono text-xs font-medium">
+        {order.orderId}
+      </TableCell>
+      <TableCell className="text-muted-foreground">
         {formatDistanceToNow(order.createdAt, {
           locale: ptBR,
-          addSuffix: true
+          addSuffix: true,
         })}
       </TableCell>
       <TableCell>
         <OrderStatus status={order.status} />
       </TableCell>
-      <TableCell className='font-medium'>
-        {order.customerName}
-      </TableCell>
-      <TableCell className='font-medium'>
-        {order.total.toLocaleString('pt-BR', { currency: 'BRL', style: 'currency' })}
+      <TableCell className="font-medium">{order.customerName}</TableCell>
+      <TableCell className="font-medium">
+        {(order.total / 100).toLocaleString("pt-BR", {
+          currency: "BRL",
+          style: "currency",
+        })}
       </TableCell>
       <TableCell>
-        <Button variant={'outline'} size={'xs'}>
-          <ArrowRight className='w-3 h-3 mr-2 ' />
+        <Button variant={"outline"} size={"xs"}>
+          <ArrowRight className="mr-2 h-3 w-3" />
           Aprovar
         </Button>
       </TableCell>
       <TableCell>
-        <Button variant={'ghost'} size={'xs'}>
-          <X className='w-3 h-3 mr-2 ' />
+        <Button variant={"ghost"} size={"xs"}>
+          <X className="mr-2 h-3 w-3" />
           Cancelar
         </Button>
       </TableCell>
     </TableRow>
-  )
-}
+  );
+};
 
-export default OrderTableRow
+export default OrderTableRow;
