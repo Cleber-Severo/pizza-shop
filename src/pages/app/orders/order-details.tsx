@@ -18,6 +18,7 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { OrderDetailsSkeleton } from "./order-details-skeleton";
 
 export interface OrderDetailsProps {
   orderId: string;
@@ -31,8 +32,6 @@ const OrderDetails = ({ orderId, open }: OrderDetailsProps) => {
     enabled: open,
   });
 
-  if (!order) return null;
-
   return (
     <DialogContent>
       <DialogHeader>
@@ -40,7 +39,7 @@ const OrderDetails = ({ orderId, open }: OrderDetailsProps) => {
         <DialogDescription>Detalhes do pedido</DialogDescription>
       </DialogHeader>
 
-      {order && (
+      {order ? (
         <div className="space-y-6">
           <Table>
             <TableBody>
@@ -130,13 +129,6 @@ const OrderDetails = ({ orderId, open }: OrderDetailsProps) => {
                   </TableCell>
                 </TableRow>
               ))}
-
-              {/* <TableRow>
-                <TableCell>Pizza Mussarela família</TableCell>
-                <TableCell className="text-right">2</TableCell>
-                <TableCell className="text-right">R$ 59,99</TableCell>
-                <TableCell className="text-right">R$ 119,80</TableCell>
-              </TableRow> */}
             </TableBody>
             <TableFooter>
               <TableRow>
@@ -151,6 +143,8 @@ const OrderDetails = ({ orderId, open }: OrderDetailsProps) => {
             </TableFooter>
           </Table>
         </div>
+      ) : (
+        <OrderDetailsSkeleton />
       )}
     </DialogContent>
   );
